@@ -19,6 +19,9 @@ except ImportError:
     import simplejson as json
 from config import config
 
+def get_archive_list(ts, count):
+    None
+
 def sync():
     cookieFile = 'cookie'
     cookiejar = cookielib.MozillaCookieJar(cookieFile)
@@ -35,7 +38,14 @@ def sync():
     result = resp.text
 
     pageHtml = BS(result)
-    
+    data_js = pageHtml.body.find('textarea',attrs={'name':'js'}).text
+
+
+    ctx = execjs.compile(data_js + "\nvar get = function(){return this.p}")
+    js_data = ctx.call('get');
+
+    for item in js_data['a']:
+        print item['archDate'], ',', item['count']
 
 if __name__ == "__main__":
-    None
+    sync()

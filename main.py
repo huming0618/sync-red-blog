@@ -10,6 +10,8 @@ import json
 import execjs
 import datetime
 
+import shutil 
+
 try:
     from BeautifulSoup import BeautifulSoup as BS
 except ImportError:
@@ -27,13 +29,15 @@ def grab(result):
     #print result
 
     postDateSpan = pageHtml.select('span.pleft span.blogsep')[0]
-    print postDateSpan.text
+    #print postDateSpan.text
 
     postTitleSpan = pageHtml.select('h3.title span.tcnt')[0]
-    print postTitleSpan.text
+    #print postTitleSpan.text
 
     postContentDiv = pageHtml.select('div.nbw-blog')[0]
     #print postContentDiv.prettify()
+
+    return postDateSpan.text, postTitleSpan.text, postContentDiv.prettify()
 
 def read_urls():
     urlList = []
@@ -57,17 +61,24 @@ def sync_post():
 
     session = requests.Session()
     
+    shutil.rmtree('output')
+    os.mkdir('output')
+    
     for url in urls:
         postUrl = url.strip().rstrip('/')
         resp = session.get(postUrl, headers=headers, cookies=cookiejar)
         result = resp.text
-        grab(result)
+        postDateText, postTitle, postContent = grab(result)
+  
+        outputPath = os.path.join('output', postDateText + '_' + postTitle + '.html')
+        with io.open(outputPath, 'w') as temp:
+            temp.write(postContent)
  
 
 
     #print result
-    with io.open('output/temp.html', 'w', encoding='gbk') as temp:
-        temp.write(result)
+    # with io.open('output/temp.html', 'w', encoding='gbk') as temp:
+    #     temp.write(result)
 
 if __name__ == "__main__":
     sync_post()

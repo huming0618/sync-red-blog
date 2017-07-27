@@ -43,7 +43,7 @@ def read_urls():
     urlList = []
     with open('urls.txt') as urlsFile:
         urlList = urlsFile.readlines()
-    
+
     return urlList
 
 def sync_post():
@@ -68,14 +68,15 @@ def sync_post():
         postUrl = url.strip().rstrip('/')
         resp = session.get(postUrl, headers=headers, cookies=cookiejar)
         result = resp.text
-        postDateText, postTitle, postContent = grab(result)
-  
-        outputPath = os.path.join('output', postDateText + '_' + postTitle + '.html')
-        with io.open(outputPath, 'w') as temp:
-            temp.write(postContent)
+        try:
+            postDateText, postTitle, postContent = grab(result)
+    
+            outputPath = os.path.join('output', postDateText + '_' + postTitle + '.html')
+            with io.open(outputPath, 'w') as temp:
+                temp.write(postContent)
+        except Exception, e:
+            print "Error Occured for URL [%s] with message %s" % (url, e.message)
  
-
-
     #print result
     # with io.open('output/temp.html', 'w', encoding='gbk') as temp:
     #     temp.write(result)

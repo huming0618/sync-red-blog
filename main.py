@@ -69,6 +69,8 @@ def sync_post():
     theBookmaker.writeTitle(u'你好吗')
     theBookmaker.writeCoverImage('cover.jpg')
     theBookmaker.writeTOCTitle(u'目录')
+    theBookmaker.writeAuthor(u'四号楼的鱼')
+    theBookmaker.writePublisher(u'Dear Peter')
 
     total = len(urls)
     for i, url in enumerate(reversed(urls)):

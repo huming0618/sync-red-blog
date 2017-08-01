@@ -18,7 +18,7 @@ class book(object):
         self.toc_image = ''
         self.toc = []
         self.navpoint = []
-    
+
     def pack(self):
         return self.__dict__
 
@@ -36,6 +36,12 @@ class bookmaker:
 
     def writeTitle(self, title='the book'):
         self.book.book_title = title
+
+    def writeAuthor(self, author='Peter'):
+        self.book.book_author = author
+    
+    def writePublisher(self, publisher='Fish'):
+        self.book.book_publisher = publisher
 
     def writeCoverImage(self, image='images/cover.jpg'):
         self.book.book_coverimage = image
@@ -73,7 +79,7 @@ class bookmaker:
             temp.write(text)
 
     def make_opf(self):
-        None
+        
 
     def make_toc(self):
         output_file = os.path.join(self.output_path, 'toc.html')

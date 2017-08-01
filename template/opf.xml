@@ -2,31 +2,47 @@
 <package unique-identifier="uid" xmlns:opf="http://www.idpf.org/2007/opf" xmlns:asd="http://www.idpf.org/asdfaf">
     <metadata>
         <dc-metadata  xmlns:dc="http://purl.org/metadata/dublin_core" xmlns:oebpackage="http://openebook.org/namespaces/oeb-package/1.0/">
-            <dc:Title>{{ title }}</dc:Title>
+            <dc:Title>{{ book_title }}</dc:Title>
             <dc:Language>zh</dc:Language>
-            <dc:Creator>{{ author }}</dc:Creator>
+            <dc:Creator>{{ book_author }}</dc:Creator>
             <dc:Copyrights>Copyright owner</dc:Copyrights>
-            <dc:Publisher>{{ publisher }}</dc:Publisher>
+            <dc:Publisher>{{ book_publisher }}</dc:Publisher>
             <x-metadata>
-                <EmbeddedCover>{{ coverimage }}</EmbeddedCover>
+                <EmbeddedCover>{{ book_coverimage }}</EmbeddedCover>
             </x-metadata>
         </dc-metadata>
     </metadata>
+    <!-- The list of all the files included in the package (HTML, and NCX). 
+    I recommend that you list all CSS and image files as well. 
+    If you do, when generating the Kindle book, any missing (or misspelled) files will generate a warning. -->
     <manifest>
-        {% for item in manifest %}
-        <item id="{{ item.id }}" media-type="{{ item.mediatype }}" href="{{ item.href }}"></item>
+        <!-- <item id="content" media-type="text/x-oeb1-document" href="index.html#toc"></item>
+        <item id="ncx" media-type="application/x-dtbncx+xml" href="toc.ncx"/>
+        <item id="text" media-type="text/x-oeb1-document" href="index.html#over"></item>
+        <item id="Images" media-type="text/x-oeb1-document" href="Images.html"></item>
+        <item id="background" media-type="text/x-oeb1-document" href="background.html"></item> -->
+        <item id="content" media-type="text/x-oeb1-document" href="toc.html">
+        <item id="ncx" media-type="application/x-dtbncx+xml" href="toc.ncx"/>
+        {% for item in toc %}
+        <item id="{{ item.href }}" media-type="text/x-oeb1-document" href="{{ item.href }}"/>
         {% endfor %}
     </manifest>
+    <!-- The list of HTML files, in the order in which they must be read. -->
     <spine toc="ncx">
-        {% for item in ncx %}
-        <itemref idref="item.id"/>
-        {% endfor %}
+        <!-- <itemref idref="content"/>
+        <itemref idref="text"/>
+        <itemref idref="Images"/>
+        <itemref idref="background"/> -->
+        <itemref idref="content"/>
     </spine>
+    <!-- This element points to key items in your book, such as the TOC, 
+    where the text starts, if there is a dedication, etc. -->
     <guide>
         <!-- <reference type="toc" title="Table of Contents" href="toc.html"/>
         <reference type="text" title="Book" href="index.html"/> -->
-        {% for item in guide %}
-        <reference type="{{ item.type }}" title="{{ item.title }}" href="{{ item.href }}"/>
+        <reference type="toc" title="{{ toc_title }}" href="toc.html"/>
+        {% for item in toc %}
+        <reference type="text" title="{{ item.title }}" href="{{ item.href }}"/>
         {% endfor %}
     </guide>
 </package>

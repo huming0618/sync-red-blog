@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh">
+<head>
+</head>
+<body>
+    <h2 id="ch2">{{ title }}</h2>
+    
+    {% if header_image|length %}
+    <div class="center">
+        <br>
+        <img src="{{ header_image }}" width="75" alt="----------">
+    </div>
+    {% endif %}
+
+
+    {% if subtitle is defined %}
+    <h6>{{ subtitle }}</h6>
+    {% endif %}
+
+    {% if head_quote is defined %}
+    <blockquote>
+        <p>{{ head_quote }}</p>
+    </blockquote>
+    {% endif %}
+
+    {{ content }}
+    
+    <mbp:pagebreak />
+</body>
+</html>

@@ -66,10 +66,12 @@ def sync_post():
     os.mkdir('output')
     
     theBookmaker = bookmaker()
-    theBookmaker.writeTOC()
+    theBookmaker.writeTitle(u'你好吗')
+    theBookmaker.writeCoverImage('cover.jpg')
+    theBookmaker.writeTOCTitle(u'目录')
 
     total = len(urls)
-    for i, url in enumerate(urls):
+    for i, url in enumerate(reversed(urls)):
         postUrl = url.strip().rstrip('/')
         resp = session.get(postUrl, headers=headers, cookies=cookiejar)
         result = resp.text
@@ -77,8 +79,13 @@ def sync_post():
         try:
             postDateText, postTitle, postContent = grab(result)
     
-            theBookmaker.writeTOCItem(postDateText, postTitle)
-            theBookmaker.writeChapter(postDateText, postTitle, postContent)
+            chapter_name = 'ch_' + str(i)
+            theBookmaker.writeTOCFileLinkItem(postTitle, chapter_name + '.html', '')
+            theBookmaker.writeNavPointFileLinkItem(postTitle, chapter_name + '.html', chapter_name, i+3)
+            theBookmaker.writeChapter(chapter_name, postTitle, postContent, postDateText)
+
+            if i > 5:
+                break
 
             print "\n"*100
             print 'Processed %d/%d'%(i,total)
@@ -90,11 +97,16 @@ def sync_post():
             print e
  
 
-    theBookmaker.seal('Red\'s Blog')
+    theBookmaker.seal()
     #print result
     # with io.open('output/temp.html', 'w', encoding='gbk') as temp:
     #     temp.write(result)
 
 if __name__ == "__main__":
-    
+    # from jinja2 import Environment, FileSystemLoader, select_autoescape
+    # env = Environment(
+    #     loader=FileSystemLoader(searchpath='template')
+    # )
+    # tpl = env.get_template('chapter.html')
+    # print tpl.render(title='my title', content='this is the content <b>bold</b>')
     sync_post()

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh">
+<head>
+     <meta charset="utf-8" />
+</head>
+<body>
+    <div id="toc">
+        <h2>
+            {{ toc_title }} 
+            <br />
+            {% if toc_image|length %}
+            <div class="center">
+                <img src="{{ toc_image }}" width="75" alt="----------" />
+            </div>
+            {% endif %}
+        </h2>
+        <ul>
+            {% for item in toc %}
+            <li><a href="{{ item.href }}">{{ item.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <mbp:pagebreak />
+</body>
+</html>

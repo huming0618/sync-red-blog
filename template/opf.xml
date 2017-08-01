@@ -21,10 +21,10 @@
         <item id="text" media-type="text/x-oeb1-document" href="index.html#over"></item>
         <item id="Images" media-type="text/x-oeb1-document" href="Images.html"></item>
         <item id="background" media-type="text/x-oeb1-document" href="background.html"></item> -->
-        <item id="content" media-type="text/x-oeb1-document" href="toc.html">
+        <item id="content" media-type="text/x-oeb1-document" href="toc.html"/>
         <item id="ncx" media-type="application/x-dtbncx+xml" href="toc.ncx"/>
         {% for item in toc %}
-        <item id="{{ item.href }}" media-type="text/x-oeb1-document" href="{{ item.href }}"/>
+        <item id="{{ item.name }}" media-type="text/x-oeb1-document" href="{{ item.href }}"/>
         {% endfor %}
     </manifest>
     <!-- The list of HTML files, in the order in which they must be read. -->
@@ -42,7 +42,7 @@
         <reference type="text" title="Book" href="index.html"/> -->
         <reference type="toc" title="{{ toc_title }}" href="toc.html"/>
         {% for item in toc %}
-        <reference type="text" title="{{ item.title }}" href="{{ item.href }}"/>
+        <reference type="{{ item.name }}" title="{{ item.title }}" href="{{ item.href }}"/>
         {% endfor %}
     </guide>
 </package>

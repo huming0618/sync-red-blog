@@ -1,6 +1,7 @@
 #coding=utf8
 import os
 import io
+import shutil 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
@@ -43,7 +44,9 @@ class bookmaker:
     def writePublisher(self, publisher='Fish'):
         self.book.book_publisher = publisher
 
-    def writeCoverImage(self, image='images/cover.jpg'):
+    def writeCoverImage(self, image='cover.jpg'):
+        image_file = os.path.join(self.template_path, image)
+        shutil.copyfile(image_file, os.path.join(self.output_path, image))
         self.book.book_coverimage = image
 
     def writeTOCTitle(self, title='目录', image=''):
@@ -52,13 +55,13 @@ class bookmaker:
     
     def writeTOCItem(self, item_title, item_name):
         item_href = '#' + item_name
-        self.book.toc.append(dict(href=item_href, title=item_title))
+        self.book.toc.append(dict(href=item_href, title=item_title, name=item_name))
 
-    def writeTOCFileLinkItem(self, item_title, item_file, item_name):
+    def writeTOCFileLinkItem(self, item_title, item_file, item_name, name_for_hash=False):
         item_href = item_file
-        if item_name:
+        if name_for_hash:
             item_href = item_href + '#' + item_name
-        self.book.toc.append(dict(href=item_href, title=item_title))
+        self.book.toc.append(dict(href=item_href, title=item_title, name=item_name))
 
     def writeNavPointItem(self, item_title, item_name, item_order):
         item_href = '#' + item_name
@@ -79,7 +82,12 @@ class bookmaker:
             temp.write(text)
 
     def make_opf(self):
-        
+        output_file = os.path.join(self.output_path, 'book.opf')
+        tpl = self.tplenv.get_template('opf.xml')
+        text = tpl.render(self.book.pack())
+
+        with io.open(output_file, 'w', encoding='utf8') as temp:
+            temp.write(text)
 
     def make_toc(self):
         output_file = os.path.join(self.output_path, 'toc.html')
@@ -103,6 +111,9 @@ class bookmaker:
         #make_opf()
         self.make_toc()
         self.make_ncx()
+        self.make_opf()
+
+        #/Applications/kindlegen /Users/me/Documents/Book/book.opf
 
         # output_file = os.path.join(self.output_path, name + '.html')
         # tpl = env.get_template('chapter.html')

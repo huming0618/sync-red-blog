@@ -67,7 +67,7 @@ def sync_post():
     
     theBookmaker = bookmaker()
     theBookmaker.writeTitle(u'你好吗')
-    theBookmaker.writeCoverImage('cover.jpg')
+    theBookmaker.writeCoverImage('cover.jpeg')
     theBookmaker.writeTOCTitle(u'目录')
     theBookmaker.writeAuthor(u'四号楼的鱼')
     theBookmaker.writePublisher(u'Dear Peter')
@@ -82,12 +82,12 @@ def sync_post():
             postDateText, postTitle, postContent = grab(result)
     
             chapter_name = 'ch_' + str(i)
-            theBookmaker.writeTOCFileLinkItem(postTitle, chapter_name + '.html', '')
+            theBookmaker.writeTOCFileLinkItem(postTitle, chapter_name + '.html', chapter_name)
             theBookmaker.writeNavPointFileLinkItem(postTitle, chapter_name + '.html', chapter_name, i+3)
             theBookmaker.writeChapter(chapter_name, postTitle, postContent, postDateText)
 
-            if i > 5:
-                break
+            # if i > 5:
+            #     break
 
             print "\n"*100
             print 'Processed %d/%d'%(i,total)
